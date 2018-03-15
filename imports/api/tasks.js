@@ -6,8 +6,9 @@ export const Tasks = new Mongo.Collection('tasks');
 
 if (Meteor.isServer) {
   // This code only runs on the server
-  // Only publish tasks that are public or belong to the current user
+  // It registers a publication named "tasks", which can be accessed by Meteor.subscribe on the client (see App.js)
   Meteor.publish('tasks', function tasksPublication() {
+    // Only publish tasks that are public or belong to the current user
     return Tasks.find({
       $or: [
         { private: { $ne: true } },
@@ -17,15 +18,16 @@ if (Meteor.isServer) {
   });
 }
 
+//And here are the things that are essentially POST endpoints! Neat.
 Meteor.methods({
   'tasks.insert'(text) {
     check(text, String);
-
+ 
     // Make sure the user is logged in before inserting a task
-    if (! this.userId) {
+    if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
-
+ 
     Tasks.insert({
       text,
       createdAt: new Date(),
@@ -35,7 +37,8 @@ Meteor.methods({
   },
   'tasks.remove'(taskId) {
     check(taskId, String);
-
+ 
+    //Important: The only way this could happen is if someone called remove from outside the UI! So we need to defend against it!
     const task = Tasks.findOne(taskId);
     if (task.private && task.owner !== this.userId) {
       // If the task is private, make sure only the owner can delete it
@@ -47,7 +50,8 @@ Meteor.methods({
   'tasks.setChecked'(taskId, setChecked) {
     check(taskId, String);
     check(setChecked, Boolean);
-
+ 
+    //Important: The only way this could happen is if someone called setChecked from outside the UI! So we need to defend against it!
     const task = Tasks.findOne(taskId);
     if (task.private && task.owner !== this.userId) {
       // If the task is private, make sure only the owner can check it off
@@ -59,14 +63,14 @@ Meteor.methods({
   'tasks.setPrivate'(taskId, setToPrivate) {
     check(taskId, String);
     check(setToPrivate, Boolean);
-
+ 
     const task = Tasks.findOne(taskId);
-
+ 
     // Make sure only the task owner can make a task private
     if (task.owner !== this.userId) {
       throw new Meteor.Error('not-authorized');
     }
-
+ 
     Tasks.update(taskId, { $set: { private: setToPrivate } });
   },
 });
