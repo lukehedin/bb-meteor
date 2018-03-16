@@ -1,29 +1,52 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { Redirect } from 'react-router';
 import ReactDOM from 'react-dom';
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 
 import { Tasks } from '../api/tasks.js';
- 
-import Task from './Task.js';
-import AccountsUIWrapper from './AccountsUIWrapper.js';
+import { Bounty } from '../api/bounty.js';
+
+import AppHeader from '../ui/AppHeader/AppHeader';
+import AppFooter from '../ui/AppFooter/AppFooter';
+import BaseWelcome from '../ui/Welcome/BaseWelcome';
+import BaseResults from '../ui/Results/BaseResults';
+import BaseBounty from '../ui/Bounty/BaseBounty';
+import BaseAuthentication from '../ui/Authentication/BaseAuthentication';
  
 // App component - represents the whole app
 class App extends Component {
   constructor(props) {
     super(props);
- 
+
+    //Check localstorage for userLocaton
+    let userLocation = localStorage.getItem('userLocation');
+    //Use meteor to get user
+    let user = Meteor.user();
+
     this.state = {
       hideCompleted: false,
+      user: user || null,
+      userLocation: userLocation 
+        ? JSON.parse(userLocation) 
+        : null
     };
   }
+  
+  setUserLocation(place){
+    let userLocation = {
+      placeId: place.place_id,
+      name: place.name,
+      latitude: place.geometry.location.lat(),
+      longitude: place.geometry.location.lng()
+    };
 
-  getTasks() {
-    return [
-      { _id: 1, text: 'This is task 1' },
-      { _id: 2, text: 'This is task 2' },
-      { _id: 3, text: 'This is task 3' },
-    ];
+    localStorage.setItem('userLocation', JSON.stringify(userLocation));
+
+    this.setState({
+      userLocation: userLocation
+    });
   }
 
   handleSubmit(e) {
@@ -43,7 +66,6 @@ class App extends Component {
       hideCompleted: !this.state.hideCompleted,
     });
   }
-
  
   renderTasks() {
     let filteredTasks = this.props.tasks;
@@ -66,50 +88,72 @@ class App extends Component {
   }
  
   render() {
+    //Required in order to pass onPlaceChange props
+    const BaseWelcomeFn = (props) => {
+      return this.state.userLocation 
+        ? (<Redirect to="/results"/>)
+        : (<BaseWelcome onPlaceChange={this.setUserLocation.bind(this)} {...props}/>)
+    };
+
+    const BaseResultsFn = (props) => {
+      return this.state.userLocation
+        ? (<BaseResults bounty={this.props.bounty} {...props}/>)
+        : (<Redirect to="/"/>)
+    }
+
     return (
       <div className="container">
-        <header>
-          <h1>Todo List ({this.props.incompleteCount})</h1>
+        <Router>
+          <div>
+            {/* <header>
+              <h1>Todo List ({this.props.incompleteCount})</h1>
 
-          <label className="hide-completed">
-            <input
-              type="checkbox"
-              readOnly
-              checked={this.state.hideCompleted}
-              onClick={this.toggleHideCompleted.bind(this)}
-            />
-            Hide Completed Tasks
-          </label>
+              <label className="hide-completed">
+                <input
+                  type="checkbox"
+                  readOnly
+                  checked={this.state.hideCompleted}
+                  onClick={this.toggleHideCompleted.bind(this)}
+                />
+                Hide Completed Tasks
+              </label>
 
-          <AccountsUIWrapper />
+              
 
-          { this.props.currentUser ?
-            <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
-              <input
-                type="text"
-                ref="textInput"
-                placeholder="Type to add new tasks"
-              />
-            </form> : ''
-          }
+              { this.props.currentUser ?
+                <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
+                  <input
+                    type="text"
+                    ref="textInput"
+                    placeholder="Type to add new tasks"
+                  />
+                </form> : ''
+              }
 
-        </header>
- 
-        <ul>
+            </header> */}
+            <AppHeader onPlaceChange={this.setUserLocation.bind(this)} currentLocation={this.state.userLocation} currentUser={this.props.currentUser}/>
+            <div className="content">
+              <Route exact path="/" render={BaseWelcomeFn} />
+              <Route path="/results" component={BaseResultsFn} />
+              <Route path="/bounty" component={BaseBounty} />
+              <Route path="/authentication" component={BaseAuthentication} />
+            </div>
+            <AppFooter />
+          </div>
+        </Router>
+
+        {/* <ul>
           {this.renderTasks()}
-        </ul>
+        </ul> */}
       </div>
     );
   }
 }
 
 export default withTracker(() => {
-  Meteor.subscribe('tasks');
+  Meteor.subscribe('bounty');
 
-  //Fetch Tasks, with no selector, and sort by createdAtDesc, and supply them to the underlying App
   return {
-    tasks: Tasks.find({}, { sort: { createdAt: -1 } }).fetch(),
-    incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
-    currentUser: Meteor.user(),
+    bounty: Bounty.find({}).fetch()
   };
 })(App);

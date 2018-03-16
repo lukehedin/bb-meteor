@@ -1,0 +1,86 @@
+.app-header {
+    display: flex;
+    flex-direction: column;
+
+	.header-logo {
+		flex: 4;
+		cursor: pointer;
+
+		img {
+			display: none;
+			width: rem-calc(60);
+			height: rem-calc(40);
+
+			@media #{$device-small} {
+				display: inline-block;
+			}
+		}
+
+		h1 {
+			vertical-align: top;
+			display: inline-block;
+			text-align: center;
+			font-size: rem-calc(20);
+			line-height: rem-calc(20);
+			width: rem-calc(100);
+		}
+
+		&:hover {
+			opacity: 0.7;
+		}
+	}
+
+	.header-user {
+		flex: 5;
+		text-align: right;
+
+		button {
+			margin: rem-calc(2);
+			margin-right: 0;
+		}
+    }
+    
+    .app-subheader {
+        background-color: $bounty-pink;
+        background-image: url(../Assets//img/icon_background.svg);
+        background-repeat: repeat-x;
+        padding: rem-calc(12 0);
+    
+        .location-info {
+            font-size: $text-tiny;
+            display: flex;
+    
+            .location-search {
+                @include bounty-item-flex;
+            }
+    
+            .spacer {
+                @include bounty-item-flex;
+                display: none;
+    
+                @media #{$device-large} {
+                    display: inline-block;
+                }
+            }
+    
+            .birthday-facts {
+                @include bounty-item-flex;
+                display: none;
+    
+                @media #{$device-large} {
+                    display: inline-block;
+                }
+    
+                color: $bounty-white;
+    
+                .title {
+                    font-weight: bold;
+                }
+    
+                > div {
+                    padding: rem-calc(0 12);
+                }
+            }
+        }
+    }
+}
