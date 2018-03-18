@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import Button from '../Button/Button';
 import LocationSearch from "../LocationSearch/LocationSearch";
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
+import { Meteor } from 'meteor/meteor';
 
-export default class AppHeader extends Component {
+class AppHeader extends Component {
 	constructor(props) {
 		super(props);
 
@@ -13,6 +14,37 @@ export default class AppHeader extends Component {
 				details: 'On your birthday, 29 September, Alfred Hitchcock was born! Perhaps a film career is in store for you?'
 			}
 		};
+    }
+    getUserSection(){
+        if(Meteor.loggingIn()){
+            return <div>Loading...</div>
+        } else{
+            return Meteor.user()
+            ? (<div className="user-details">
+                    <div className="user-header-info">
+                        {'Ahoy,' + Meteor.user().username + '!'}
+                    </div>
+                    <Button className="light-button" text="Logout" onClick={this.logout.bind(this)} />
+                </div>)
+            : (<div className="user-buttons">
+                <Link to="/authentication">
+                    <Button className="light-button" text="Login"/>
+                </Link>
+                <Link to={{ pathname: '/authentication', search: '?type=register' }}>
+                    <Button className="dark-button" text="Register"/>
+                </Link>
+            </div>);
+        }
+    }
+    logout() {
+        Meteor.logout((err) => {
+            if(err){
+                alert(err.reason);
+            } else {
+                this.props.onPlaceChange(null);
+                this.props.history.push('/welcome');
+            }
+        });
     }
 	render() {
         let subHeader = this.props.currentLocation
@@ -40,19 +72,7 @@ export default class AppHeader extends Component {
                         <h1>Birthday Bounty</h1>
                     </Link>
                     <div className="header-user">
-                        {false ?
-                            <div className="user-details">
-
-                            </div> :
-                            <div className="user-buttons">
-                                <Link to="/authentication">
-                                    <Button className="light-button" text="Log In"/>
-                                </Link>
-                                <Link to={{ pathname: '/authentication', search: '?type=register' }}>
-                                    <Button className="dark-button" text="Sign Up"/>
-                                </Link>
-                            </div>
-                        }
+                        {this.getUserSection()}
                     </div>
                 </div>
                 {subHeader}
@@ -60,3 +80,5 @@ export default class AppHeader extends Component {
 		);
 	}
 }
+
+export default withRouter(AppHeader);

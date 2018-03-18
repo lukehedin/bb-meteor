@@ -16,7 +16,7 @@ export default class BountyResultItem extends Component {
         let dateCreated = new Date(this.props.item.created);
 
         let newLabel = false
-            ? (<div class="bounty-mini-label">
+            ? (<div className="bounty-mini-label">
                     NEW               
                 </div>)
             : null;
@@ -28,6 +28,9 @@ export default class BountyResultItem extends Component {
                 <div className="bounty-item-inner">
                     <Link to={{ pathname: '/bounty', search: '?id=' + this.props.item.bountyId }}>
                         <div className="bounty-item-photo" style={photoStyle}>
+                            <div className="bounty-org-name bounty-photo-label">
+                                {this.props.item.organisation.name}
+                            </div>
                             <div className="bounty-type-icon-container">
                                 {this.renderTypes()}
                             </div>
@@ -35,12 +38,9 @@ export default class BountyResultItem extends Component {
                     </Link>
                     <div className="bounty-item-label">
                         <h1>
-                            {this.props.item.title}
+                            {this.props.item.title} {newLabel}
                         </h1>
                         <div className="bounty-item-label-left">
-                            {this.props.item.organisation.name} {newLabel}
-                        </div>
-                        <div className="bounty-item-label-km">
                             0km
                         </div>
                     </div>

@@ -4,8 +4,6 @@ import Button from '../Button/Button';
 export default class AppFooter extends Component {
 	constructor(props) {
 		super(props);
-
-		this.handleClearDetailsClick = this.handleClearDetailsClick.bind(this);
 	}
 	handleClearDetailsClick() {
         localStorage.removeItem('userLocation');

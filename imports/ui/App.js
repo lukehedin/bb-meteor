@@ -5,8 +5,9 @@ import ReactDOM from 'react-dom';
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 
-import { Tasks } from '../api/tasks.js';
-import { Bounty } from '../api/bounty.js';
+import { ApiTasks } from '../api/tasks.js';
+import { DbBounty } from '../api/bounty.js';
+import { ApiAuthentication } from '../api/authentication.js';
 
 import AppHeader from '../ui/AppHeader/AppHeader';
 import AppFooter from '../ui/AppFooter/AppFooter';
@@ -20,55 +21,61 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    //Check localstorage for userLocaton
-    let userLocation = localStorage.getItem('userLocation');
     //Use meteor to get user
-    let user = Meteor.user();
+    //LH unsure if this is safe
+    let user = null; //Meteor.user();
 
     this.state = {
       hideCompleted: false,
       user: user || null,
-      userLocation: userLocation 
-        ? JSON.parse(userLocation) 
-        : null
+      userLocation: this.getUserLocation()
     };
+  }
+  getUserLocation(){
+    let userLocation = localStorage.getItem('userLocation');
+    return userLocation 
+      ? JSON.parse(userLocation) 
+      : null; 
   }
   setUserLocation(place){
-    let userLocation = {
-      placeId: place.place_id,
-      name: place.name,
-      latitude: place.geometry.location.lat(),
-      longitude: place.geometry.location.lng()
-    };
+    if(place){
+      let userLocation = {
+        placeId: place.place_id,
+        name: place.name,
+        latitude: place.geometry.location.lat(),
+        longitude: place.geometry.location.lng()
+      };
+  
+      localStorage.setItem('userLocation', JSON.stringify(userLocation));
 
-    localStorage.setItem('userLocation', JSON.stringify(userLocation));
+      this.setState({
+        userLocation: userLocation
+      });
+    } else{
+      localStorage.removeItem('userLocation');
 
-    this.setState({
-      userLocation: userLocation
-    });
-  }
-  handleSubmit(e) {
-    // e.preventDefault();
- 
-    // // Find the text field via the React ref
-    // const text = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
- 
-    // Meteor.call('tasks.insert', text);
- 
-    // // Clear form
-    // ReactDOM.findDOMNode(this.refs.textInput).value = '';
+      this.setState({
+        userLocation: null
+      });
+    }
   }
   render() {
     //Required in order to pass onPlaceChange props
     const BaseWelcomeFn = (props) => {
-      return this.state.userLocation 
+      return this.getUserLocation()
         ? (<Redirect to="/results"/>)
         : (<BaseWelcome onPlaceChange={this.setUserLocation.bind(this)} {...props}/>)
     };
 
     const BaseResultsFn = (props) => {
-      return this.state.userLocation
+      return this.getUserLocation()
         ? (<BaseResults bounty={this.props.bounty} {...props}/>)
+        : (<Redirect to="/"/>)
+    }
+
+    const BaseBountyFn = (props) => {
+      return this.getUserLocation()
+        ? (<BaseBounty {...props}/>)
         : (<Redirect to="/"/>)
     }
 
@@ -76,10 +83,11 @@ class App extends Component {
       <div className="container">
         <Router>
           <div>
-            <AppHeader onPlaceChange={this.setUserLocation.bind(this)} currentLocation={this.state.userLocation} currentUser={this.props.currentUser}/>
+            <AppHeader onPlaceChange={this.setUserLocation.bind(this)} currentLocation={this.getUserLocation()} currentUser={this.props.currentUser}/>
             <Route exact path="/" render={BaseWelcomeFn} />
+            <Route path="/welcome" component={BaseWelcomeFn} />
             <Route path="/results" component={BaseResultsFn} />
-            <Route path="/bounty" component={BaseBounty} />
+            <Route path="/bounty" component={BaseBountyFn} />
             <Route path="/authentication" component={BaseAuthentication} />
             <AppFooter />
           </div>
@@ -93,6 +101,6 @@ export default withTracker(() => {
   Meteor.subscribe('bounty');
 
   return {
-    bounty: Bounty.find({}).fetch()
+    bounty: DbBounty.find({}).fetch()
   };
 })(App);

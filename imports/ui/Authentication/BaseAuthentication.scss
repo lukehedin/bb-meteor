@@ -1,0 +1,19 @@
+.authentication-container{
+    position: relative;
+
+    form {
+        width: 80%;
+        max-width: rem-calc(320);
+        margin: rem-calc(16) auto;
+        text-align: center;
+
+        input {
+            width: 100%;
+            margin: rem-calc(8 0);
+        }
+
+        .auth-switch-msg {
+            padding-top: rem-calc(32);
+        }
+    }
+}

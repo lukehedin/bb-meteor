@@ -8,15 +8,17 @@ export default class BaseAuthentication extends Component {
         super(props);
 
         this.state = {
-            isRegister: false
+            isRegister: this.getIsRegister(this.props)
         };
     }
     componentWillReceiveProps(newProps){
-        let isRegister = new URLSearchParams(newProps.location.search).get('type');
-
         this.setState({
-            isRegister: isRegister === "register"
+            isRegister: this.getIsRegister(newProps)
         });
+    }
+    getIsRegister(props){
+        let regParam = new URLSearchParams(props.location.search).get('type');
+        return regParam === "register";
     }
     render() {
         let form = this.state.isRegister
@@ -24,7 +26,7 @@ export default class BaseAuthentication extends Component {
             : <LoginForm />
 
         return (
-          <div className="content">
+          <div className="authentication-container content">
               {form}
           </div>
         );

@@ -39,6 +39,11 @@
             flex: 5;
             text-align: right;
     
+            .user-header-info{
+                display: inline-block;
+                padding-right: rem-calc(8);
+            }
+
             button {
                 margin: rem-calc(2);
                 margin-right: 0;

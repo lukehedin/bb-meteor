@@ -6,6 +6,7 @@ export default  class LocationSearch extends Component {
 		super(props);
 		
 		this.handleLocationFocus = this.handleLocationFocus.bind(this);
+		this.handleLocationBlur = this.handleLocationBlur.bind(this);
 
 		this.state = { dobDay: '', dobMonth: 0, dobYear: '', location: null };
 	}
@@ -24,6 +25,9 @@ export default  class LocationSearch extends Component {
 			location: null
 		});
 	}
+	handleLocationBlur(e){
+		if(this.props.currentLocation) e.target.value = this.props.currentLocation.name;
+	}
 	render() {
         let value = this.props.currentLocation
             ? this.props.currentLocation.name
@@ -32,7 +36,11 @@ export default  class LocationSearch extends Component {
 		return (
 			<div className="location-search">
 				<img className="location-icon" src="img/place_icon.svg" alt="" />
-				<input ref="search" onFocus={this.handleLocationFocus} placeholder="Enter city/suburb" defaultValue={value} />
+				<input ref="search" 
+				onFocus={this.handleLocationFocus} 
+				onBlur={this.handleLocationBlur}
+				placeholder="Enter city/suburb" 
+				defaultValue={value} />
 				{!this.props.showSearchButton ? '' : <button>Search</button>}
 			</div>
 		);

@@ -4,7 +4,7 @@
 
 body {
 	margin: 0;
-	font-family: 'Raleway', sans-serif;
+	font-family: 'Roboto', sans-serif;
   	font-size: rem-calc(12);
   	color: $bounty-darkgrey;
 
@@ -44,9 +44,17 @@ body {
 	}
 
 	input, button {
-		font-family: 'Raleway', sans-serif;
+		font-family: 'Roboto', sans-serif;
 		font-size: $text-small;
 		color: $bounty-darkgrey;
+	}
+
+	input {
+		height: rem-calc(30);
+	}
+
+	a {
+		color: $bounty-pink;
 	}
 
 	.bounty-results {
@@ -61,4 +69,5 @@ body {
 @import '{}/imports/ui/AppHeader/AppHeader.scss';
 @import '{}/imports/ui/AppFooter/AppFooter.scss';
 @import '{}/imports/ui/Welcome/BaseWelcome.scss';
+@import '{}/imports/ui/Authentication/BaseAuthentication.scss';
 @import '{}/imports/ui/Results/BountyResultItem/BountyResultItem.scss';
