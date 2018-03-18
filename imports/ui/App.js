@@ -33,7 +33,6 @@ class App extends Component {
         : null
     };
   }
-  
   setUserLocation(place){
     let userLocation = {
       placeId: place.place_id,
@@ -48,45 +47,17 @@ class App extends Component {
       userLocation: userLocation
     });
   }
-
   handleSubmit(e) {
-    e.preventDefault();
+    // e.preventDefault();
  
-    // Find the text field via the React ref
-    const text = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
+    // // Find the text field via the React ref
+    // const text = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
  
-    Meteor.call('tasks.insert', text);
+    // Meteor.call('tasks.insert', text);
  
-    // Clear form
-    ReactDOM.findDOMNode(this.refs.textInput).value = '';
+    // // Clear form
+    // ReactDOM.findDOMNode(this.refs.textInput).value = '';
   }
-
-  toggleHideCompleted() {
-    this.setState({
-      hideCompleted: !this.state.hideCompleted,
-    });
-  }
- 
-  renderTasks() {
-    let filteredTasks = this.props.tasks;
-    if (this.state.hideCompleted) {
-      filteredTasks = filteredTasks.filter(task => !task.checked);
-    }
-
-    return filteredTasks.map((task) => {
-      const currentUserId = this.props.currentUser && this.props.currentUser._id;
-      const showPrivateButton = task.owner === currentUserId;
- 
-      return (
-        <Task
-          key={task._id}
-          task={task}
-          showPrivateButton={showPrivateButton}
-        />
-      );
-    });
-  }
- 
   render() {
     //Required in order to pass onPlaceChange props
     const BaseWelcomeFn = (props) => {
@@ -105,46 +76,14 @@ class App extends Component {
       <div className="container">
         <Router>
           <div>
-            {/* <header>
-              <h1>Todo List ({this.props.incompleteCount})</h1>
-
-              <label className="hide-completed">
-                <input
-                  type="checkbox"
-                  readOnly
-                  checked={this.state.hideCompleted}
-                  onClick={this.toggleHideCompleted.bind(this)}
-                />
-                Hide Completed Tasks
-              </label>
-
-              
-
-              { this.props.currentUser ?
-                <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
-                  <input
-                    type="text"
-                    ref="textInput"
-                    placeholder="Type to add new tasks"
-                  />
-                </form> : ''
-              }
-
-            </header> */}
             <AppHeader onPlaceChange={this.setUserLocation.bind(this)} currentLocation={this.state.userLocation} currentUser={this.props.currentUser}/>
-            <div className="content">
-              <Route exact path="/" render={BaseWelcomeFn} />
-              <Route path="/results" component={BaseResultsFn} />
-              <Route path="/bounty" component={BaseBounty} />
-              <Route path="/authentication" component={BaseAuthentication} />
-            </div>
+            <Route exact path="/" render={BaseWelcomeFn} />
+            <Route path="/results" component={BaseResultsFn} />
+            <Route path="/bounty" component={BaseBounty} />
+            <Route path="/authentication" component={BaseAuthentication} />
             <AppFooter />
           </div>
         </Router>
-
-        {/* <ul>
-          {this.renderTasks()}
-        </ul> */}
       </div>
     );
   }

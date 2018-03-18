@@ -9,6 +9,34 @@
 		.bounty-item-photo {
 			width: 100%;
 			border-radius: rem-calc(6);
+			animation: fadein 0.1s linear;
+			height: rem-calc(150);
+			background-position: center;
+			background-size: cover;
+			position: relative;
+
+			&:hover{
+				animation: fadeout 0.2s forwards;
+			}
+
+			.bounty-type-icon-container {
+				position: absolute;
+				bottom: rem-calc(-16);
+				right: rem-calc(6);
+				display: flex;
+
+				.bounty-type-icon{
+					margin: rem-calc(0 -2);
+				}
+			}
+		}
+
+		.bounty-item-label{
+			h1 {
+				font-weight: 600;
+				font-size: $text-small;
+			}
 		}
 	}
 }
+

@@ -9,7 +9,9 @@
     width: 100%;
     padding-top: 10vh;
 
-    .content {
-        text-align: center;
+    .location-info{
+        position: relative;
+        margin: 0 auto;
+        max-width: rem-calc(600);
     }
 }

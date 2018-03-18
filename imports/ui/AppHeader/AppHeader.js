@@ -13,29 +13,11 @@ export default class AppHeader extends Component {
 				details: 'On your birthday, 29 September, Alfred Hitchcock was born! Perhaps a film career is in store for you?'
 			}
 		};
-	}
+    }
 	render() {
-		return (
-            <header className="app-header">
-                <div className="content">
-                    <Link className="header-logo" to='/'>
-                        <img src="img/bb_flag.svg" alt="" />
-                        <h1>Birthday Bounty</h1>
-                    </Link>
-                    <div className="header-user">
-                        {false ?
-                            <div className="user-details">
-
-                            </div> :
-                            <div className="user-buttons">
-                                <Button className="light-button" linkTo="/authentication" text="Log In"/>
-                                <Button className="dark-button" linkTo="/signup" text="Sign Up"/>
-                            </div>
-                        }
-                    </div>
-                </div>
-                <nav className="app-subheader moving-background">
-                    <div className="location-info content">
+        let subHeader = this.props.currentLocation
+            ? (<div className="app-subheader moving-background">
+                    <div className="lower-header content">
                         <LocationSearch onPlaceChange={this.props.onPlaceChange} showSearchButton={false} currentLocation={this.props.currentLocation} />
                         <div className="spacer"></div>
                         <div className="birthday-facts">
@@ -47,7 +29,33 @@ export default class AppHeader extends Component {
                             </div>
                         </div>
                     </div>
-                </nav>
+                </div>)
+            : null;
+
+		return (
+            <header className="app-header">
+                <div className="upper-header content">
+                    <Link className="header-logo" to='/'>
+                        <img src="img/bb_flag.svg" alt="" />
+                        <h1>Birthday Bounty</h1>
+                    </Link>
+                    <div className="header-user">
+                        {false ?
+                            <div className="user-details">
+
+                            </div> :
+                            <div className="user-buttons">
+                                <Link to="/authentication">
+                                    <Button className="light-button" text="Log In"/>
+                                </Link>
+                                <Link to={{ pathname: '/authentication', search: '?type=register' }}>
+                                    <Button className="dark-button" text="Sign Up"/>
+                                </Link>
+                            </div>
+                        }
+                    </div>
+                </div>
+                {subHeader}
             </header>
 		);
 	}

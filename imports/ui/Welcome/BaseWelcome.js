@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Meteor } from 'meteor/meteor';
 import LocationSearch from "../LocationSearch/LocationSearch";
 
 export default class BaseWelcome extends Component {

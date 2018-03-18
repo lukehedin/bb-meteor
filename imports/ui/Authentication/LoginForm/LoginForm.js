@@ -1,52 +1,41 @@
-import Util from '../util';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import Button from '../Button/Button';
-import AccountsUIWrapper from './AccountsUIWrapper.js';
+import Button from '../../Button/Button';
 
 export default class LoginForm extends Component {
   constructor(props) {
     super(props);
 
 		this.handleLoginClick = this.handleLoginClick.bind(this);
-		this.inputkeyDown = this.inputkeyDown.bind(this);
-    
-    this.state = {
-      bountyResultItems: []
-    };
+		this.onSubmitForm = this.onSubmitForm.bind(this);
   }
-  inputkeyDown(e){
-    debugger;
-    if(e.keyCode === 13) this.handleLoginClick();
+  onSubmitForm(e){
+    e.preventDefault();
+
   }
 	handleLoginClick() {
     var username = this.refs.username.value;
     var password = this.refs.password.value;
 
-    Util.post("/api/login", { 
-      username: username,
-      password: password
-    }, {
-      success: function(result) {
-        //If successful, store JWT in localStorage
-        localStorage.setItem('bb-jwt', result.token);
+    // Util.post("/api/login", { 
+    //   username: username,
+    //   password: password
+    // }, {
+    //   success: function(result) {
+    //     //If successful, store JWT in localStorage
+    //     localStorage.setItem('bb-jwt', result.token);
   
-        console.log(result);
-      }
-    });
+    //     console.log(result);
+    //   }
+    // });
 	}
   render() {
     return (
-      <div className="login-form">
-        <AccountsUIWrapper />
-        <br/>
-        ---
-        <br />
-        <input ref="username" onKeyDown={this.inputkeyDown} type="text" placeholder="Enter username" />
-        <input ref="password" onKeyDown={this.inputkeyDown} type="password" placeholder="Enter password" />
+      <form onSubmit={this.onSubmitForm.bind(this)} className="login-form">
+        <input ref="username" type="text" placeholder="Enter username" />
+        <input ref="password" type="password" placeholder="Enter password" />
         <Button text="Log In" onClick={this.handleLoginClick}/>
-        <Link to="/forgotten">I forgot my password</Link>
-      </div>
+      </form>
     );
   }
 }

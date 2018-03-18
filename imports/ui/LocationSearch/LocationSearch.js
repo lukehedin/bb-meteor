@@ -25,14 +25,14 @@ export default  class LocationSearch extends Component {
 		});
 	}
 	render() {
-        let placeholder = this.props.currentLocation
+        let value = this.props.currentLocation
             ? this.props.currentLocation.name
-            : "Enter city/suburb";
+            : '';
         
 		return (
 			<div className="location-search">
 				<img className="location-icon" src="img/place_icon.svg" alt="" />
-				<input ref="search" onFocus={this.handleLocationFocus} placeholder={placeholder} />
+				<input ref="search" onFocus={this.handleLocationFocus} placeholder="Enter city/suburb" defaultValue={value} />
 				{!this.props.showSearchButton ? '' : <button>Search</button>}
 			</div>
 		);

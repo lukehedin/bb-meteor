@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Meteor } from 'meteor/meteor';
 
 export default class BaseBounty extends Component {
     constructor(props) {
@@ -12,7 +11,7 @@ export default class BaseBounty extends Component {
 
     render() {
         return (
-          <div>
+          <div className="content">
             Bounty
           </div>
         );

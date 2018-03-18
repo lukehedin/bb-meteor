@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 
 export default class Button extends Component {
 	constructor(props) {
@@ -8,20 +7,10 @@ export default class Button extends Component {
 	render() {
         var cls = "button " + (this.props.className || "");
 
-        var buttonHtml = (
+        return (
             <button className={cls} onClick={this.props.onClick}>
                 {this.props.text}
             </button>
         );
-
-        if(this.props.linkTo){
-            return (
-                <Link to={this.props.linkTo}>
-                    {buttonHtml}
-                </Link>
-            );
-        } else{
-            return buttonHtml;
-        }
 	}
 }
