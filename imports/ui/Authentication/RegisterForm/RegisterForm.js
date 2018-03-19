@@ -8,7 +8,7 @@ export default class LoginForm extends Component {
   constructor(props) {
         super(props);
 
-        this.onSubmitForm = this.onSubmitForm.bind(this);
+        this.onFacebookClick = this.onFacebookClick.bind(this);
 
         this.state = {
             formError: null
@@ -17,6 +17,19 @@ export default class LoginForm extends Component {
     isEmail(emailString){
         var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
         return regex.test(emailString);
+    }
+    onFacebookClick(){
+    }
+    onGoogleClick(){
+        Meteor.loginWithGoogle({
+            requestPermissions: ['public_profile', 'email']
+          }, (err) => {
+            if (err) {
+              // handle error
+            } else {
+                debugger;
+            }
+        });
     }
     onSubmitForm(e){
         e.preventDefault();

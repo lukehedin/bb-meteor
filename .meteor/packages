@@ -25,3 +25,7 @@ accounts-password
 fourseven:scss
 momentjs:moment
 themeteorchef:jquery-validation
+accounts-facebook
+accounts-google
+dburles:google-maps
+service-configuration

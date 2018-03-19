@@ -1,3 +1,5 @@
+import { Meteor } from 'meteor/meteor';
+
 export default {
     scriptsLoading: false,
     scriptsReady: false,
@@ -24,7 +26,9 @@ export default {
     loadGoogleMapsAndPlaces: function(callbackFn) {
         this.scriptsLoading = true;
         $.getScript('https://www.google.com/jsapi', () => {
-            window.google.load('maps', '3', { other_params: ['key=AIzaSyBnG2wcWi0MrBxd3wTtNCKTau-xHD_B324&libraries=places'], 
+            window.google.load('maps', '3', { 
+                //key here is restricted to this domain, so safely stored client side
+                other_params: ['key=' + Meteor.settings.public.googleApiKey + '&libraries=places'], 
             callback: () => {
                 this.scriptsReady = true;
                 for(let fn of this.onReadyFns) fn();

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Google from '../Google'
+import Google from '../Google';
 
 export default  class LocationSearch extends Component {
 	constructor(props) {
