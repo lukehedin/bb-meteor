@@ -19,6 +19,17 @@ export default class LoginForm extends Component {
         return regex.test(emailString);
     }
     onFacebookClick(){
+        Meteor.loginWithFacebook({
+            requestPermissions: ['public_profile', 'email']
+          }, (err) => {
+            if (err) {
+              // handle error
+              debugger;
+            } else {
+              // successful login!
+              debugger;
+            }
+        });
     }
     onGoogleClick(){
         Meteor.loginWithGoogle({
@@ -113,6 +124,7 @@ export default class LoginForm extends Component {
     render() {
         return (
         <form className="login-form" onSubmit={this.onSubmitForm.bind(this)}>
+            {/* <Button text="Login with Facebook" onClick={this.onFacebookClick}/> */}
             <FormInput ref="username" type="text" label="Username" />
             <FormInput ref="email" type="email" label="Email" />
             <FormInput ref="password" type="password" label="Password" />
