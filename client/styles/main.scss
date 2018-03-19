@@ -57,17 +57,26 @@ body {
 		color: $bounty-pink;
 	}
 
-	.bounty-results {
-		padding: rem-calc(24 0);
-  }
+	.container-content{
+		height: 100vh;
+		display: flex;
+		flex-direction: column;
+
+		.scroll-content{
+			flex-grow: 1;
+			overflow-y: scroll;
+		}
+	}
 }
 
 @import '{}/imports/ui/Task/Task.scss';
 @import '{}/imports/ui/Button/Button.scss';
+@import '{}/imports/ui/FormInput/FormInput.scss';
 @import '{}/imports/ui/BountyTypeIcon/BountyTypeIcon.scss';
 @import '{}/imports/ui/LocationSearch/LocationSearch.scss';
 @import '{}/imports/ui/AppHeader/AppHeader.scss';
 @import '{}/imports/ui/AppFooter/AppFooter.scss';
 @import '{}/imports/ui/Welcome/BaseWelcome.scss';
 @import '{}/imports/ui/Authentication/BaseAuthentication.scss';
+@import '{}/imports/ui/Results/BaseResults.scss';
 @import '{}/imports/ui/Results/BountyResultItem/BountyResultItem.scss';

@@ -7,19 +7,23 @@
 	.bounty-item-inner {
 		padding: rem-calc(6 12);
 
+		a {
+			text-decoration: none;
+		}
+
+		animation: fadein 0.1s linear;
+		&:hover{
+			animation: fadeout 0.2s forwards;
+		}
+
 		.bounty-item-photo {
 			width: 100%;
 			border-radius: rem-calc(6);
-			animation: fadein 0.1s linear;
 			height: rem-calc(150);
 			background-position: center;
 			background-size: cover;
 			position: relative;
 			margin-bottom: rem-calc(4);
-
-			&:hover{
-				animation: fadeout 0.2s forwards;
-			}
 
 			.bounty-photo-label {
 				position: absolute;
@@ -33,6 +37,12 @@
 				bottom: rem-calc(4);
 				left: rem-calc(4);
 				color: $bounty-darkgrey;
+
+				.bounty-km{
+					display: inline-block;
+					padding-left: rem-calc(4);
+					color: $bounty-grey;
+				}
 			}
 
 			.bounty-type-icon-container {
@@ -49,8 +59,32 @@
 		}
 
 		.bounty-item-label{
+			display: flex;
+
 			h1 {
 				font-size: $text-small;
+				display: inline-block;
+				flex-grow: 1;
+				text-decoration: none;
+			}
+
+			.mini-labels-area{
+				text-transform: uppercase;
+
+				.bounty-mini-label{
+					display: inline-block;
+					background-color: $bounty-pink;
+					color: $bounty-white;
+					border-radius: rem-calc(4);
+					padding: rem-calc(4);
+					font-size: $text-tiny;
+					margin-right: rem-calc(4);
+
+					&.rating{
+						background-color: $bounty-white;
+						color: $bounty-pink;
+					}
+				}
 			}
 		}
 	}

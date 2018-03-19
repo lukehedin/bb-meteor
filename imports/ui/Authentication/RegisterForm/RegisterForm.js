@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../../Button/Button';
+import FormInput from '../../FormInput/FormInput';
 import { Meteor } from 'meteor/meteor'
 
 export default class LoginForm extends Component {
@@ -8,34 +9,104 @@ export default class LoginForm extends Component {
         super(props);
 
         this.onSubmitForm = this.onSubmitForm.bind(this);
+
+        this.state = {
+            formError: null
+        };
+    }
+    isEmail(emailString){
+        var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        return regex.test(emailString);
     }
     onSubmitForm(e){
         e.preventDefault();
 
-        var username = this.refs.username.value;
-        var password = this.refs.password.value;
-        var confpassword = this.refs.confpassword.value;
-        var dob = this.refs.dob.value;
-        var email = this.refs.email.value;
+        let formData = {
+            username: this.refs.username.getValue(),
+            password : this.refs.password.getValue(),
+            confpassword : this.refs.confpassword.getValue(),
+            email : this.refs.email.getValue()
+        };
 
-        if(password !== confpassword){
-            alert('Passwords do not match!');
-            return;
+        let isValid = this.validateForm(formData);
+        if(!isValid) return;
+
+        Meteor.call('authentication.register', formData, (err, result) => {
+            if(err) {
+                let errorMsg = null;
+
+                switch(err.error){
+                    case "email-in-use":
+                        errorMsg = "Email is already in use. If you've forgotten your password, use the 'I forgot my password' link below.";
+                        break;
+                    case "username-in-use":
+                        errorMsg = "Username is already in use. Please choose a different username."
+                        break;
+                    default:
+                        errorMsg = "An error occurred (" + err.error + "). Please try again later."
+                        break;
+                }
+
+                this.setState({
+                    formError: 'Incorrect username or password.'
+                });
+            } else {
+                Meteor.loginWithPassword(formData.username, formData.password, (err) => {
+                    if(err){
+                        this.setState({
+                            formError: err.reason
+                        });
+                    } else{
+                        this.props.onAuthenticated();
+                    }
+                });
+            }
+        });
+    }
+    validateForm(formData){
+        let errorMsg = null;
+
+        switch(true){
+            case (!formData.username):
+                errorMsg = "Please provide a username.";
+                break;
+            case (!formData.email || !this.isEmail(formData.email)):
+                errorMsg = "Please provide a valid email address.";
+                break;
+            case (!formData.password):
+                errorMsg = "Please provide a password.";
+                break;
+            case (!formData.confpassword):
+                errorMsg = "Please confirm your password.";
+                break;
+            case (formData.password !== formData.confpassword):
+                errorMsg = "Passwords do not match.";
+                break;
+            case (formData.password.length < 6):
+                errorMsg = "Password must be at least 6 characters";
+                break;
+            default:
+                break;
         }
 
-        Meteor.call('authentication.register', username, password, email, dob);
+        if(errorMsg){
+            this.setState({
+                formError: errorMsg
+            });
+        }
 
-        debugger;
+        return !errorMsg;
     }
     render() {
         return (
         <form className="login-form" onSubmit={this.onSubmitForm.bind(this)}>
-            <input required ref="username" type="text" placeholder="Enter username" />
-            <input required ref="password" type="password" placeholder="Enter password" />
-            <input required ref="confpassword" type="password" placeholder="Confirm password" />
+            <FormInput ref="username" type="text" label="Username" />
+            <FormInput ref="email" type="email" label="Email" />
+            <FormInput ref="password" type="password" label="Password" />
+            <FormInput ref="confpassword" type="password" label="Confirm Password" />
             {/* <input required ref="dob" type="text" placeholder="Date of Birth" /> */}
-            <input required ref="email" type="email" placeholder="Email" />
-            <Button text="Log In" onClick={this.onSubmitForm.bind(this)}/>
+            <div className="form-error">{this.state.formError}</div>
+            <Button text="Log In" type="submit" />
             <div className="auth-switch-msg">
             <div>
                 Already have an account?

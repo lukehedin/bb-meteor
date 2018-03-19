@@ -5,28 +5,31 @@ import { Accounts } from 'meteor/accounts-base';
 
 //And here are the things that are essentially POST endpoints! Neat.
 Meteor.methods({
-  'authentication.register'(username, password, email) {
-    //TODO
-    check(username, String);
-    check(email, String);
-    check(password, String);
+  'authentication.register'(registerData) {
+
+    // The UI shouldn't allow this to happen, but if it does, error
+    if (this.userId) throw new Meteor.Error('already-logged-in');
+    
+    check(registerData.username, String);
+    check(registerData.email, String);
+    check(registerData.password, String);
  
-    // Make sure the user is NOT logged in before registering new user
-    if (this.userId) {
-        //LH: Usnsure about this error string thing
-      throw new Meteor.Error('already-logged-in');
-    }
- 
+    let emailExists = Meteor.users.find({
+        "emails.address": registerData.email
+    }, { limit: 1 }).count() > 0;
+
+    if(emailExists) throw new Meteor.Error('email-in-use');
+
+    let userExists = Meteor.users.find({
+        "username": registerData.username
+    }, { limit: 1 }).count() > 0;
+
+    if(userExists) throw new Meteor.Error('username-in-use');
+
     Accounts.createUser({
-        username: username, 
-        password: password,
-        email: email
-    }, (err) => {
-        if(err) {
-            console.log(err);
-        } else {
-            console.log('LH - USER REGISTERED: ' + username);
-        }
+        username: registerData.username, 
+        password: registerData.password,
+        email: registerData.email
     });
   },
 });

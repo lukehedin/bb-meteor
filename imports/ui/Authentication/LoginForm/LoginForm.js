@@ -1,34 +1,66 @@
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Button from '../../Button/Button';
-import { Meteor } from 'meteor/meteor'
+import FormInput from '../../FormInput/FormInput';
 
-class LoginForm extends Component {
+export default class LoginForm extends Component {
   constructor(props) {
     super(props);
+    
+    this.state = {
+        formError: null
+    };
+  }
+  validateForm(formData){
+    let errorMsg = null;
 
-		this.onSubmitForm = this.onSubmitForm.bind(this);
+    switch(true){
+        case (!formData.username):
+            errorMsg = "Please provide a username.";
+            break;
+        case (!formData.password):
+            errorMsg = "Please provide a password.";
+            break;
+        default:
+            break;
+    }
+
+    if(errorMsg){
+        this.setState({
+            formError: errorMsg
+        });
+    }
+
+    return !errorMsg;
   }
   onSubmitForm(e){
     e.preventDefault();
 
-    var username = this.refs.username.value;
-    var password = this.refs.password.value;
+    let formData = {
+      username: this.refs.username.getValue(),
+      password : this.refs.password.getValue()
+    };
 
-    Meteor.loginWithPassword(username, password, (err) => {
+    let isValid = this.validateForm(formData);
+    if(!isValid) return;
+
+    Meteor.loginWithPassword(formData.username, formData.password, (err) => {
       if(err){
-        alert(err.reason);
-      } else {
-        this.props.history.push('/results');
+          this.setState({
+              formError: 'Incorrect username or password.'
+          });
+      } else{
+          this.props.onAuthenticated();
       }
     });
   }
   render() {
     return (
       <form onSubmit={this.onSubmitForm.bind(this)} className="login-form">
-        <input ref="username" type="text" placeholder="Enter username" />
-        <input ref="password" type="password" placeholder="Enter password" />
-        <Button text="Log In" onClick={this.onSubmitForm.bind(this)}/>
+        <FormInput ref="username" type="text" label="Username" />
+        <FormInput ref="password" type="password" label="Password" />
+        <div className="form-error">{this.state.formError}</div>
+        <Button text="Log In" type="submit" />
         <div className="auth-switch-msg">
           <div>
             Don't have an account?
@@ -41,6 +73,3 @@ class LoginForm extends Component {
     );
   }
 }
-
-//Used to allow history push
-export default withRouter(LoginForm);

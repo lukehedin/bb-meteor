@@ -5,10 +5,8 @@ export default class Button extends Component {
 		super(props);
 	}
 	render() {
-        var cls = "button " + (this.props.className || "");
-
         return (
-            <button className={cls} onClick={this.props.onClick}>
+            <button {...this.props} className={"button " + this.props.className}>
                 {this.props.text}
             </button>
         );

@@ -82,14 +82,16 @@ class App extends Component {
     return (
       <div className="container">
         <Router>
-          <div>
+          <div className="container-content">
             <AppHeader onPlaceChange={this.setUserLocation.bind(this)} currentLocation={this.getUserLocation()} currentUser={this.props.currentUser}/>
-            <Route exact path="/" render={BaseWelcomeFn} />
-            <Route path="/welcome" component={BaseWelcomeFn} />
-            <Route path="/results" component={BaseResultsFn} />
-            <Route path="/bounty" component={BaseBountyFn} />
-            <Route path="/authentication" component={BaseAuthentication} />
-            <AppFooter />
+            <div className="scroll-content">
+              <Route exact path="/" render={BaseWelcomeFn} />
+              <Route path="/welcome" component={BaseWelcomeFn} />
+              <Route path="/results" component={BaseResultsFn} />
+              <Route path="/bounty" component={BaseBountyFn} />
+              <Route path="/authentication" component={BaseAuthentication} />
+              <AppFooter />
+            </div>
           </div>
         </Router>
       </div>
