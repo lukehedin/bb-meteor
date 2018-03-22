@@ -22,7 +22,7 @@ class AppHeader extends Component {
             return Meteor.user()
             ? (<div className="user-details">
                     <div className="user-header-info">
-                        {'Ahoy,' + Meteor.user().username + '!'}
+                        {'Ahoy, ' + (Meteor.user().username || Meteor.user().profile.name) + '!'}
                     </div>
                     <Button className="light-button" text="Logout" onClick={this.logout.bind(this)} />
                 </div>)

@@ -1,7 +1,7 @@
 .app-header {
     .upper-header{
         display: flex;
-        padding: rem-calc(10 0);
+        padding: rem-calc(8 0);
 
         .header-logo {
             flex: 4;
@@ -52,7 +52,7 @@
         background-color: $bounty-pink;
         background-image: url(../Assets//img/icon_background.svg);
         background-repeat: repeat-x;
-        padding: rem-calc(12 0);
+        padding: rem-calc(8 0);
     
         .lower-header {
             font-size: $text-tiny;

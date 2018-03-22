@@ -25,6 +25,7 @@ export default {
 
     loadGoogleMapsAndPlaces: function(callbackFn) {
         this.scriptsLoading = true;
+
         $.getScript('https://www.google.com/jsapi', () => {
             window.google.load('maps', '3', { 
                 //key here is restricted to this domain, so safely stored client side

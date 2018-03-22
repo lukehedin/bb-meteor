@@ -59,6 +59,17 @@ class App extends Component {
       });
     }
   }
+  applyBountyTimeData(){
+    let now = new Date();
+    let dateCreated = new Date(this.props.bounty.created);
+    //TODO on bounty load 
+  }
+  applyBountyDistances(){
+    //TODO on location change
+  }
+  applyBountyAvailibilities(){
+    //TODO on user change
+  }
   render() {
     //Required in order to pass onPlaceChange props
     const BaseWelcomeFn = (props) => {
@@ -74,8 +85,16 @@ class App extends Component {
     }
 
     const BaseBountyFn = (props) => {
-      return this.getUserLocation()
-        ? (<BaseBounty {...props}/>)
+      let bountyId = new URLSearchParams(props.location.search).get('bountyId');
+
+      if(!bountyId) return (<Redirect to="/"/>);
+
+      let bounty = this.props.bounty.find(b => {
+        return b._id._str === bountyId;
+      });
+
+      return bounty
+        ? (<BaseBounty bounty={bounty} currentUser={this.props.currentUser} {...props}/>)
         : (<Redirect to="/"/>)
     }
 

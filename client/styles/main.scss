@@ -65,6 +65,7 @@ body {
 		.scroll-content{
 			flex-grow: 1;
 			overflow-y: scroll;
+			overflow: overlay;
 		}
 	}
 }
@@ -79,4 +80,5 @@ body {
 @import '{}/imports/ui/Welcome/BaseWelcome.scss';
 @import '{}/imports/ui/Authentication/BaseAuthentication.scss';
 @import '{}/imports/ui/Results/BaseResults.scss';
+@import '{}/imports/ui/Bounty/BaseBounty.scss';
 @import '{}/imports/ui/Results/BountyResultItem/BountyResultItem.scss';

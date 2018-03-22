@@ -20,25 +20,16 @@ export default class LoginForm extends Component {
     }
     onFacebookClick(){
         Meteor.loginWithFacebook({
-            requestPermissions: ['public_profile', 'email']
+            requestPermissions: ['public_profile', 'email', 'user_birthday']
           }, (err) => {
             if (err) {
               // handle error
-              debugger;
+              this.setState({
+                    formError: err.reason
+                });
             } else {
               // successful login!
-              debugger;
-            }
-        });
-    }
-    onGoogleClick(){
-        Meteor.loginWithGoogle({
-            requestPermissions: ['public_profile', 'email']
-          }, (err) => {
-            if (err) {
-              // handle error
-            } else {
-                debugger;
+                this.props.onAuthenticated();
             }
         });
     }
@@ -124,7 +115,7 @@ export default class LoginForm extends Component {
     render() {
         return (
         <form className="login-form" onSubmit={this.onSubmitForm.bind(this)}>
-            {/* <Button text="Login with Facebook" onClick={this.onFacebookClick}/> */}
+            <Button text="Login with Facebook" onClick={this.onFacebookClick}/>
             <FormInput ref="username" type="text" label="Username" />
             <FormInput ref="email" type="email" label="Email" />
             <FormInput ref="password" type="password" label="Password" />

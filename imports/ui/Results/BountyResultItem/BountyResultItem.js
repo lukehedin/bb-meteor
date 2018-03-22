@@ -7,7 +7,7 @@ export default class BountyResultItem extends Component {
         super(props);
     }
     renderTypes(){
-        return this.props.item.types.map((typeId) => {
+        return this.props.bounty.types.map((typeId) => {
             return (<BountyTypeIcon key={typeId} type={typeId} />);
         });
     }
@@ -22,20 +22,17 @@ export default class BountyResultItem extends Component {
         </div>);
     }
 	render() {
-        let now = new Date();
-        let dateCreated = new Date(this.props.item.created);
-
-
-
-        const photoStyle = { backgroundImage: 'url(/img/bounty/' + this.props.item.thumbnail + ')'};
+        const photoStyle = { 
+            backgroundImage: 'url(/img/bounty/' + this.props.bounty.thumbnail + ')'
+        };
 
         return(
             <div className="bounty-item">
                 <div className="bounty-item-inner">
-                    <Link to={{ pathname: '/bounty', search: '?id=' + this.props.item.bountyId }}>
+                    <Link to={{ pathname: '/bounty', search: '?bountyId=' + this.props.bounty._id }}>
                         <div className="bounty-item-photo" style={photoStyle}>
                             <div className="bounty-org-name bounty-photo-label">
-                                <b>{this.props.item.organisation.name}</b>
+                                <b>{this.props.bounty.organisation.name}</b>
                                 <div className="bounty-km">&lt;1km</div>
                             </div>
                             <div className="bounty-type-icon-container">
@@ -44,7 +41,7 @@ export default class BountyResultItem extends Component {
                         </div>
                         <div className="bounty-item-label">
                             <h1>
-                                {this.props.item.title}
+                                {this.props.bounty.title}
                             </h1>
                             <div className="mini-labels-area">
                                 {this.getNewLabel()} 
